@@ -24,9 +24,13 @@ namespace Endeksa.API.Controllers
         [HttpGet]
         public async Task<IActionResult> All()
         {
+            //var roots = await _service.GetAllAsync();
+            ////var rootDtos = _mapper.Map<List<RootDto>>(roots.ToList());
+            //return CreateActionResult(CustomResponseDto<List<Root>>.Success(200, roots.ToList()));
+
             var roots = await _service.GetAllAsync();
-            //var rootDtos = _mapper.Map<List<RootDto>>(roots.ToList());
-            return CreateActionResult(CustomResponseDto<List<Root>>.Success(200, roots.ToList()));
+            var rootsDto = _mapper.Map<List<RootModelDto>>(roots.ToList());
+            return CreateActionResult(CustomResponseDto<List<RootModelDto>>.Success(200, rootsDto));
         }
 
         [HttpGet("get-tkgm-data")]

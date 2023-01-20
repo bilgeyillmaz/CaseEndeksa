@@ -11,6 +11,7 @@ namespace Endeksa.Core.Models
     [NotMapped]
     public class Geometry
     {
+        //public int Id { get; set; }
         public string type { get; set; }
         public List<List<List<double>>> coordinates { get; set; }
     }

@@ -14,6 +14,7 @@ namespace Endeksa.Service.Mapping
         public MapProfile()
         {
             CreateMap<Root, RootDto>().ReverseMap();
+            CreateMap<Root, RootModelDto>().ReverseMap();
         }
     }
 }

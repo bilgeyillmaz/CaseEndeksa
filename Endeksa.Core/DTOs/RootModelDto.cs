@@ -1,16 +1,18 @@
-﻿using System;
+﻿using Endeksa.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Endeksa.Core.Models
+namespace Endeksa.Core.DTOs
 {
-    [NotMapped]
-    public class Properties
+    public class RootModelDto
     {
-        //public int Id { get; set; }
+        public string type { get; set; }
+        public string geometryType { get; set; }
+        public string coordinates { get; set; }
         public string ilceAd { get; set; }
         public string mevkii { get; set; }
         public int ilId { get; set; }
