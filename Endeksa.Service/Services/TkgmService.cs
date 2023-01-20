@@ -129,7 +129,7 @@ namespace Endeksa.Service.Services
 
                     await _repository.AddAsync(root);
                     await _unitOfWork.CommitAsync();
-                    //await CacheAllRootsAsync();
+                    await CacheAllRootsAsync();
                 }
             }
             return true;
