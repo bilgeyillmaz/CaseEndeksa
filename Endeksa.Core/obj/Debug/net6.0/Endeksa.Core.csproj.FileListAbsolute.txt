@@ -1,0 +1,14 @@
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\bin\Debug\net6.0\Endeksa.Core.deps.json
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\bin\Debug\net6.0\Endeksa.Core.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\bin\Debug\net6.0\Endeksa.Core.pdb
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\Endeksa.Core.csproj.AssemblyReference.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\Endeksa.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\Endeksa.Core.AssemblyInfoInputs.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\Endeksa.Core.AssemblyInfo.cs
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\Endeksa.Core.csproj.CoreCompileInputs.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\Endeksa.Core.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\refint\Endeksa.Core.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\Endeksa.Core.pdb
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\ref\Endeksa.Core.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\bin\Debug\net6.0\Endeksa.Core.runtimeconfig.json
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Core\obj\Debug\net6.0\Endeksa.Core.genruntimeconfig.cache

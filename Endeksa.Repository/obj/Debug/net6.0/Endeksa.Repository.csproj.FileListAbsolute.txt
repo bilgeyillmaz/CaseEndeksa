@@ -1,0 +1,17 @@
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\bin\Debug\net6.0\Endeksa.Repository.deps.json
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\bin\Debug\net6.0\Endeksa.Repository.runtimeconfig.json
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\bin\Debug\net6.0\Endeksa.Repository.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\bin\Debug\net6.0\Endeksa.Repository.pdb
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\bin\Debug\net6.0\Endeksa.Core.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\bin\Debug\net6.0\Endeksa.Core.pdb
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\Endeksa.Repository.csproj.AssemblyReference.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\Endeksa.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\Endeksa.Repository.AssemblyInfoInputs.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\Endeksa.Repository.AssemblyInfo.cs
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\Endeksa.Repository.csproj.CoreCompileInputs.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\Endeksa.Repository.csproj.CopyComplete
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\Endeksa.Repository.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\refint\Endeksa.Repository.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\Endeksa.Repository.pdb
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\Endeksa.Repository.genruntimeconfig.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Repository\obj\Debug\net6.0\ref\Endeksa.Repository.dll

@@ -1,0 +1,17 @@
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\Endeksa.Service.csproj.AssemblyReference.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\Endeksa.Service.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\Endeksa.Service.AssemblyInfoInputs.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\Endeksa.Service.AssemblyInfo.cs
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\Endeksa.Service.csproj.CoreCompileInputs.cache
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\bin\Debug\net6.0\Endeksa.Service.deps.json
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\bin\Debug\net6.0\Endeksa.Service.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\bin\Debug\net6.0\Endeksa.Service.pdb
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\bin\Debug\net6.0\Endeksa.Core.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\bin\Debug\net6.0\Endeksa.Core.pdb
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\Endeksa.Service.csproj.CopyComplete
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\Endeksa.Service.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\refint\Endeksa.Service.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\Endeksa.Service.pdb
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\obj\Debug\net6.0\ref\Endeksa.Service.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\bin\Debug\net6.0\Endeksa.Repository.dll
+C:\Users\billg\source\repos\CaseEndeksa\Endeksa.Service\bin\Debug\net6.0\Endeksa.Repository.pdb
