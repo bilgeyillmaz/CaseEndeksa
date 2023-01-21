@@ -31,15 +31,8 @@ namespace Endeksa.Service.Services
                 string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/" + Latitude + "/" + Longitude + "/";
                 using (var response = await httpClient.GetAsync(apiurl.Replace(',', '.')))
                 {
-                    // 41.02101716111575 / 29.01263684034348 /
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     rootDto = JsonConvert.DeserializeObject<RootDto>(apiResponse);
-                    //Root root = new Root()
-                    //{
-                    //    geometry = rootDto.geometry,
-                    //    type= rootDto.type,
-                    //    properties= rootDto.properties
-                    //};
                     List<string> coordinatesList = new();
                     for (int i = 0; i < rootDto.Geometry.Coordinates.Count; i++)
                     {
