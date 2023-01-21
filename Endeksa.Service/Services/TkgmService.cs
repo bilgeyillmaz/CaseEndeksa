@@ -61,14 +61,14 @@ namespace Endeksa.Service.Services
             var cacheDatas = _redisCache.GetData<IEnumerable<Root>>(CacheRootKey);
             //if (cacheDatas == null)
             //{
-            //    throw new NotFoundExcepiton($"There is no any data");
+            //    throw new NotFoundExcepiton($"There is no any cached data");
             //}
-            if (cacheDatas == null || cacheDatas.Count() == 0)
-            {
-                cacheDatas = await _repository.GetAll().ToListAsync();
-                var expiryTime = DateTimeOffset.Now.AddMinutes(5);
-                _redisCache.SetData<IEnumerable<Root>>(CacheRootKey, cacheDatas, expiryTime);
-            }
+            //if (cacheDatas == null || cacheDatas.Count() == 0)
+            //{
+            //    cacheDatas = await _repository.GetAll().ToListAsync();
+            //    var expiryTime = DateTimeOffset.Now.AddMinutes(5);
+            //    _redisCache.SetData<IEnumerable<Root>>(CacheRootKey, cacheDatas, expiryTime);
+            //}
             return await Task.FromResult(cacheDatas);
         }
 

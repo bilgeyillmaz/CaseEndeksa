@@ -15,6 +15,7 @@ namespace Endeksa.Core.Models
         //public int Id { get; set; }
         [JsonProperty("type")]
         public string Type { get; set; }
+
         [JsonProperty("coordinates")]
         public List<List<List<double>>> Coordinates { get; set; }
     }

@@ -24,8 +24,15 @@ namespace Endeksa.API.Controllers
         public async Task<IActionResult> All()
         {
             var roots = await _service.GetAllAsync();
-            var rootsDto = _mapper.Map<List<RootModelDto>>(roots.ToList());
-            return CreateActionResult(CustomResponseDto<List<RootModelDto>>.Success(200, rootsDto));
+            if(roots == null)
+            {
+              return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, "There is no any data at redis cache."));
+            }
+            else
+            {
+                var rootsDto = _mapper.Map<List<RootModelDto>>(roots.ToList());
+                return CreateActionResult(CustomResponseDto<List<RootModelDto>>.Success(200, rootsDto));
+            }
         }
 
         [HttpGet("GetAndAddTkgmData")]
