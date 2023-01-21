@@ -20,3 +20,4 @@ Eğer cache üzerinde data bulunmuyor ise; GetAll actionı üzerinden "There is 
 GetAndAddTkgmData action'a istek yapıldığında öncelikle datalar redis cache üzerinde bulunuyor mu kontrolü yapılır; eğer bu data
 cache sisteminde bulunmuyor ise web servis üzerinden datalar çekilmektedir.
 
+- launchSettings.json > default true olan launchBrowser ayarı "false" olarak değiştirilmiştir.
