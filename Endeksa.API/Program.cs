@@ -26,12 +26,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddStackExchangeRedisCache(options => {
-//    options.Configuration = "localhost:6379";
-//});
-//containerBuilder.Register<IRedisClientsManager>(c =>
-//            new RedisManagerPool("localhost:6379"));
-//containerBuilder.Register(c => c.Resolve<IRedisClientsManager>().GetCacheClient());
 
 builder.Services.AddScoped(typeof(NotFoundFilter<>));
 builder.Services.AddAutoMapper(typeof(MapProfile));
