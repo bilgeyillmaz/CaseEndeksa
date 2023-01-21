@@ -13,16 +13,16 @@ namespace Endeksa.Core.Models
     {
         [JsonProperty("type")]
         public string Type { get; set; }
+
         [JsonProperty("geometry")]
         [NotMapped]
         public Geometry Geometry { get; set; }
+
         [JsonProperty("properties")]
         [NotMapped]
         public Properties Properties { get; set; }
-
         //public int GeometryId { get; set; }
         //public int PropertiesId { get; set; }
-
         public string GeometryType { get; set; }
         //public List<List<List<double>>> Coordinates { get; set; }
         public string Coordinates { get; set; } 
