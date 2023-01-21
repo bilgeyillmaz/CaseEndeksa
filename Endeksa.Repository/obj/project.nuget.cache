@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "sZlF1zes+E6uoPn+RdfgRgr7PZOSW8+wpc/e1GdTvpq1lyvtXPlKWuOXWxcm+K+nwQCVl6hrh7dE+mRQ9r1Zrw==",
+  "dgSpecHash": "vG2HWzFR6QO8gB3QujXNDIvpvQ5lIzSmsdAAX/bfTGU4tlz0+kWRWsi5VlnZ49gsPl2C41OGHMtl44u8fPxTyw==",
   "success": true,
   "projectFilePath": "C:\\Users\\billg\\source\\repos\\CaseEndeksa\\Endeksa.Repository\\Endeksa.Repository.csproj",
   "expectedPackageFiles": [
@@ -33,6 +33,7 @@
     "C:\\Users\\billg\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\billg\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\billg\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
+    "C:\\Users\\billg\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512",
     "C:\\Users\\billg\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.0\\pipelines.sockets.unofficial.2.2.0.nupkg.sha512",
     "C:\\Users\\billg\\.nuget\\packages\\stackexchange.redis\\2.2.4\\stackexchange.redis.2.2.4.nupkg.sha512",
     "C:\\Users\\billg\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",

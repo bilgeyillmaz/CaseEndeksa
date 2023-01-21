@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -12,7 +13,9 @@ namespace Endeksa.Core.Models
     public class Geometry
     {
         //public int Id { get; set; }
-        public string type { get; set; }
-        public List<List<List<double>>> coordinates { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("coordinates")]
+        public List<List<List<double>>> Coordinates { get; set; }
     }
 }

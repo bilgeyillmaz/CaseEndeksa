@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Endeksa.Repository.Migrations
 {
     [DbContext(typeof(TkgmDbContext))]
-    [Migration("20230120103632_FirstInitialize")]
+    [Migration("20230121112827_FirstInitialize")]
     partial class FirstInitialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,67 +31,67 @@ namespace Endeksa.Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("adaNo")
+                    b.Property<string>("AdaNo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("alan")
+                    b.Property<string>("Alan")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("coordinates")
+                    b.Property<string>("Coordinates")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("durum")
+                    b.Property<string>("Durum")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("geometryType")
+                    b.Property<string>("GeometryType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("gittigiParselListe")
+                    b.Property<string>("GittigiParselListe")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("gittigiParselSebep")
+                    b.Property<string>("GittigiParselSebep")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ilAd")
+                    b.Property<string>("IlAd")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ilId")
+                    b.Property<int>("IlId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ilceAd")
+                    b.Property<string>("IlceAd")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ilceId")
+                    b.Property<int>("IlceId")
                         .HasColumnType("int");
 
-                    b.Property<string>("mahalleAd")
+                    b.Property<string>("MahalleAd")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("mahalleId")
+                    b.Property<int>("MahalleId")
                         .HasColumnType("int");
 
-                    b.Property<string>("mevkii")
+                    b.Property<string>("Mevkii")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("nitelik")
+                    b.Property<string>("Nitelik")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("pafta")
+                    b.Property<string>("Pafta")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("parselId")
+                    b.Property<int>("ParselId")
                         .HasColumnType("int");
 
-                    b.Property<string>("parselNo")
+                    b.Property<string>("ParselNo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("type")
+                    b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("zeminId")
+                    b.Property<int>("ZeminId")
                         .HasColumnType("int");
 
-                    b.Property<string>("zeminKmdurum")
+                    b.Property<string>("ZeminKmdurum")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

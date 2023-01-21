@@ -23,7 +23,7 @@ namespace Endeksa.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> GetDatasByCoordinates(double Latitude, double Longitude)
+        public async Task<RootDto> GetDatasByCoordinates(double Latitude, double Longitude)
         {
             RootDto rootDto = new RootDto();
             using (var httpClient = new HttpClient())
@@ -41,43 +41,45 @@ namespace Endeksa.Service.Services
                     //    properties= rootDto.properties
                     //};
                     List<string> coordinatesList = new();
-                    for (int i = 0; i < rootDto.geometry.coordinates.Count; i++)
+                    for (int i = 0; i < rootDto.Geometry.Coordinates.Count; i++)
                     {
-                        for (int j = 0; j < rootDto.geometry.coordinates[i].Count; j++)
+                        for (int j = 0; j < rootDto.Geometry.Coordinates[i].Count; j++)
                         {
-                            coordinatesList.Add(String.Join(",", rootDto.geometry.coordinates[i].ToArray()[j]));
+                            coordinatesList.Add(String.Join(",", rootDto.Geometry.Coordinates[i].ToArray()[j]));
                         }
 
                     }
 
                     Root root = new Root()
                     {
-                        type = rootDto.type,
-                        geometryType = rootDto.geometry.type,
-                        coordinates = String.Join(",", coordinatesList),
-                        durum = rootDto.properties.durum,
-                        ilAd = rootDto.properties.ilAd,
-                        ilceAd = rootDto.properties.ilceAd,
-                        ilId = rootDto.properties.ilId,
-                        ilceId = rootDto.properties.ilceId,
-                        mahalleId = rootDto.properties.mahalleId,
-                        mahalleAd = rootDto.properties.mahalleAd,
-                        pafta = rootDto.properties.adaNo,
-                        alan = rootDto.properties.alan,
-                        mevkii = rootDto.properties.mevkii,
-                        parselId = rootDto.properties.parselId,
-                        nitelik = rootDto.properties.nitelik,
-                        gittigiParselListe = rootDto.properties.gittigiParselListe,
-                        gittigiParselSebep = rootDto.properties.gittigiParselSebep,
-                        zeminKmdurum = rootDto.properties.zeminKmdurum,
-                        adaNo = rootDto.properties.adaNo
+                        Type = rootDto.Type,
+                        GeometryType = rootDto.Geometry.Type,
+                        Coordinates = String.Join(",", coordinatesList),
+                        Durum = rootDto.Properties.Durum,
+                        IlAd = rootDto.Properties.IlAd,
+                        IlceAd = rootDto.Properties.llceAd,
+                        IlId = rootDto.Properties.IlId,
+                        IlceId = rootDto.Properties.IlceId,
+                        MahalleId = rootDto.Properties.MahalleId,
+                        MahalleAd = rootDto.Properties.MahalleAd,
+                        Pafta = rootDto.Properties.Pafta,
+                        Alan = rootDto.Properties.Alan,
+                        Mevkii = rootDto.Properties.Mevkii,
+                        ParselId = rootDto.Properties.ParselId,
+                        Nitelik = rootDto.Properties.Nitelik,
+                        GittigiParselListe = rootDto.Properties.GittigiParselListe,
+                        GittigiParselSebep = rootDto.Properties.GittigiParselSebep,
+                        ZeminKmdurum = rootDto.Properties.ZeminKmdurum,
+                        AdaNo = rootDto.Properties.AdaNo,
+                        ZeminId = rootDto.Properties.ZeminId,
+                        ParselNo = rootDto.Properties.ParselNo
                     };
 
                     await _tkgmRepository.AddAsync(root);
                     await _unitOfWork.CommitAsync();
                 }
             }
-            return true;
+            return rootDto;
         }
     }
 }

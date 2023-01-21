@@ -84,55 +84,54 @@ namespace Endeksa.Service.Services
             return Task.FromResult(root);
         }
 
-        public async Task<bool> GetDatasByCoordinates(double Latitude, double Longitude)
+        public async Task<RootDto> GetDatasByCoordinates(double Latitude, double Longitude)
         {
             RootDto rootDto = new RootDto();
-            using (var httpClient = new HttpClient())
+            rootDto = _redisCache.GetData<RootDto>($"{Latitude - Longitude}");
+            
+            if (rootDto == null)
             {
-                string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/" + Latitude + "/" + Longitude + "/";
-                using (var response = await httpClient.GetAsync(apiurl.Replace(',', '.')))
+                using (var httpClient = new HttpClient())
                 {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    rootDto = JsonConvert.DeserializeObject<RootDto>(apiResponse);
-                    List<string> coordinatesList = new();
-                    for (int i = 0; i < rootDto.geometry.coordinates.Count; i++)
+                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/" + Latitude + "/" + Longitude + "/";
+                    using (var response = await httpClient.GetAsync(apiurl.Replace(',', '.')))
                     {
-                        for (int j = 0; j < rootDto.geometry.coordinates[i].Count; j++)
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        rootDto = JsonConvert.DeserializeObject<RootDto>(apiResponse);
+
+                        Root root = new Root()
                         {
-                            coordinatesList.Add(String.Join(",", rootDto.geometry.coordinates[i].ToArray()[j]));
-                        }
+                            Type = rootDto.Type,
+                            GeometryType = rootDto.Geometry.Type,
+                            Coordinates = JsonConvert.SerializeObject(rootDto.Geometry.Coordinates),
+                            Durum = rootDto.Properties.Durum,
+                            IlAd = rootDto.Properties.IlAd,
+                            IlceAd = rootDto.Properties.llceAd,
+                            IlId = rootDto.Properties.IlId,
+                            IlceId = rootDto.Properties.IlceId,
+                            MahalleId = rootDto.Properties.MahalleId,
+                            MahalleAd = rootDto.Properties.MahalleAd,
+                            Pafta = rootDto.Properties.Pafta,
+                            Alan = rootDto.Properties.Alan,
+                            Mevkii = rootDto.Properties.Mevkii,
+                            ParselId = rootDto.Properties.ParselId,
+                            Nitelik = rootDto.Properties.Nitelik,
+                            GittigiParselListe = rootDto.Properties.GittigiParselListe,
+                            GittigiParselSebep = rootDto.Properties.GittigiParselSebep,
+                            ZeminKmdurum = rootDto.Properties.ZeminKmdurum,
+                            AdaNo = rootDto.Properties.AdaNo,
+                            ZeminId = rootDto.Properties.ZeminId,
+                            ParselNo = rootDto.Properties.ParselNo
+                        };
 
+                        await _repository.AddAsync(root);
+                        await _unitOfWork.CommitAsync();
+                        _redisCache.SetData<RootDto>($"{Latitude - Longitude}", rootDto, DateTimeOffset.Now.AddMinutes(5));
+                        await CacheAllRootsAsync();
                     }
-
-                    Root root = new Root()
-                    {
-                        type = rootDto.type,
-                        geometryType = rootDto.geometry.type,
-                        coordinates = String.Join(",", coordinatesList),
-                        durum = rootDto.properties.durum,
-                        ilAd = rootDto.properties.ilAd,
-                        ilceAd = rootDto.properties.ilceAd,
-                        ilId = rootDto.properties.ilId,
-                        ilceId = rootDto.properties.ilceId,
-                        mahalleId = rootDto.properties.mahalleId,
-                        mahalleAd = rootDto.properties.mahalleAd,
-                        pafta = rootDto.properties.adaNo,
-                        alan = rootDto.properties.alan,
-                        mevkii = rootDto.properties.mevkii,
-                        parselId = rootDto.properties.parselId,
-                        nitelik = rootDto.properties.nitelik,
-                        gittigiParselListe = rootDto.properties.gittigiParselListe,
-                        gittigiParselSebep = rootDto.properties.gittigiParselSebep,
-                        zeminKmdurum = rootDto.properties.zeminKmdurum,
-                        adaNo = rootDto.properties.adaNo
-                    };
-
-                    await _repository.AddAsync(root);
-                    await _unitOfWork.CommitAsync();
-                    await CacheAllRootsAsync();
                 }
             }
-            return true;
+            return rootDto;
         }
 
         public async Task RemoveAsync(Root entity)

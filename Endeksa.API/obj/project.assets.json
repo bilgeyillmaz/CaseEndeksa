@@ -1040,6 +1040,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "Newtonsoft.Json": "13.0.2",
           "StackExchange.Redis": "2.2.4"
         },
         "compile": {

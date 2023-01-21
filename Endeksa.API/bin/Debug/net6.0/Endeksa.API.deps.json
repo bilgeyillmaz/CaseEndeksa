@@ -627,6 +627,7 @@
       },
       "Endeksa.Core/1.0.0": {
         "dependencies": {
+          "Newtonsoft.Json": "13.0.2",
           "StackExchange.Redis": "2.2.4"
         },
         "runtime": {
