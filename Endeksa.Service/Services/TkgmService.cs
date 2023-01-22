@@ -88,7 +88,7 @@ namespace Endeksa.Service.Services
         {
             RootDto rootDto = new RootDto();
             rootDto = _redisCache.GetData<RootDto>($"{Latitude - Longitude}");
-            
+
             if (rootDto == null)
             {
                 using (var httpClient = new HttpClient())
@@ -127,7 +127,7 @@ namespace Endeksa.Service.Services
                         await _repository.AddAsync(root);
                         await _unitOfWork.CommitAsync();
                         _redisCache.SetData<RootDto>($"{Latitude - Longitude}", rootDto, DateTimeOffset.Now.AddMinutes(5));
-                        await CacheAllRootsAsync();
+                        await CacheAllRootsAsync(CacheRootKey);
                     }
                 }
             }
@@ -138,21 +138,21 @@ namespace Endeksa.Service.Services
         {
             _repository.Remove(entity);
             await _unitOfWork.CommitAsync();
-            await CacheAllRootsAsync();
+            await CacheAllRootsAsync(CacheRootKey);
         }
 
         public async Task RemoveRangeAsync(IEnumerable<Root> entities)
         {
             _repository.RemoveRange(entities);
             await _unitOfWork.CommitAsync();
-            await CacheAllRootsAsync();
+            await CacheAllRootsAsync(CacheRootKey);
         }
 
         public async Task UpdateAsync(Root entity)
         {
             _repository.Update(entity);
             await _unitOfWork.CommitAsync();
-            await CacheAllRootsAsync();
+            await CacheAllRootsAsync(CacheRootKey);
         }
 
         public IQueryable<Root> Where(Expression<Func<Root, bool>> expression)
@@ -160,9 +160,91 @@ namespace Endeksa.Service.Services
             throw new NotImplementedException();
         }
 
-        public async Task CacheAllRootsAsync()
+        public async Task<DistrictRootObject> GetDistricts(int CityId)
         {
-            _redisCache.SetData(CacheRootKey, await _repository.GetAll().ToListAsync(), DateTimeOffset.Now.AddMinutes(5));
+            DistrictRootObject districtRootObject = new DistrictRootObject();
+            districtRootObject = _redisCache.GetData<DistrictRootObject>($"{CityId}");
+
+            if (districtRootObject == null)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api//idariYapi/ilceListe/" + CityId;
+                    using (var response = await httpClient.GetAsync(apiurl))
+                    {
+                        if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            districtRootObject = JsonConvert.DeserializeObject<DistrictRootObject>(apiResponse);
+                            _redisCache.SetData<DistrictRootObject>($"{districtRootObject.crs.properties.id}",
+                                districtRootObject, DateTimeOffset.Now.AddMinutes(5));
+                        }
+                    }
+                }
+            }
+            return districtRootObject;
+        }
+
+        public async Task<NeighborhoodRootObject> GetNeighborhoods(int DistrictId)
+        {
+            NeighborhoodRootObject neighborhoodRootObject = new NeighborhoodRootObject();
+            neighborhoodRootObject = _redisCache.GetData<NeighborhoodRootObject>($"{DistrictId}");
+
+            if (neighborhoodRootObject == null)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/idariYapi/mahalleListe/" + DistrictId;
+                    using (var response = await httpClient.GetAsync(apiurl))
+                    {
+                        if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            neighborhoodRootObject = JsonConvert.DeserializeObject<NeighborhoodRootObject>(apiResponse);
+                            _redisCache.SetData<NeighborhoodRootObject>($"{neighborhoodRootObject?.crs.properties.id}",
+                            neighborhoodRootObject, DateTimeOffset.Now.AddMinutes(5));
+                        }
+                    }
+                }
+            }
+            return neighborhoodRootObject;
+        }
+
+        public async Task<CityFeature> GetOrCreateCityByIdAsync(int CityId)
+        {
+            CityRootObject cityRootObject = new CityRootObject();
+            CityFeature city = new CityFeature();
+            cityRootObject = _redisCache.GetData<CityRootObject>("CitiesOfTurkey");
+
+            if (cityRootObject == null)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/idariYapi/ilListe";
+                    using (var response = await httpClient.GetAsync(apiurl))
+                    {
+                        if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            cityRootObject = JsonConvert.DeserializeObject<CityRootObject>(apiResponse);
+                            var requestCity = cityRootObject.features.FirstOrDefault(x => x.properties.id == CityId);
+                            if (requestCity != null)
+                            {
+                                _redisCache.SetData<CityFeature>($"{requestCity.properties.id}",
+                               requestCity, DateTimeOffset.Now.AddMinutes(5));
+                                city = _redisCache.GetData<CityFeature>($"{CityId}");
+                            }
+                        }
+                        city = null;
+                    }
+                }
+            }
+            return city;
+        }
+
+        public async Task CacheAllRootsAsync(string cacheKEY)
+        {
+            _redisCache.SetData(cacheKEY, await _repository.GetAll().ToListAsync(), DateTimeOffset.Now.AddMinutes(5));
         }
     }
 }

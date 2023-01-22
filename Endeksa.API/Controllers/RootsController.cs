@@ -36,10 +36,43 @@ namespace Endeksa.API.Controllers
         }
 
         [HttpGet("GetAndAddTkgmDataByLocation")]
-        public async Task<IActionResult>  GetDatasByCoordinates(double lat, double lng)
+        public async Task<IActionResult>  GetDatasByCoordinates(double lat, double lon)
         {
-            var rootDto = await _service.GetDatasByCoordinates(lat, lng);   
+            var rootDto = await _service.GetDatasByCoordinates(lat, lon);   
             return CreateActionResult(CustomResponseDto<RootDto>.Success(200, rootDto));
+        }
+
+        [HttpGet("GetCityById")]
+        public async Task<IActionResult> GetCityById(int cityId)
+        {
+            var city = await _service.GetOrCreateCityByIdAsync(cityId);
+            if(city == null)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, $"There is no any data with this ({cityId}) City Id."));
+            }
+            return CreateActionResult(CustomResponseDto<CityFeature>.Success(200, city));
+        }
+
+        [HttpGet("GetDistrictsByCityId")]
+        public async Task<IActionResult> GetDistrictsByCityId(int cityId)
+        {
+            var districts = await _service.GetDistricts(cityId);
+            if (districts == null)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, $"There is no any data with this ({cityId}) City Id."));
+            }
+            return CreateActionResult(CustomResponseDto<DistrictRootObject>.Success(200, districts));
+        }
+
+        [HttpGet("GetNeighborhoodsByDistrictId")]
+        public async Task<IActionResult> GetNeighborhoodsByDistrictId(int districtId)
+        {
+            var neighborhoods = await _service.GetNeighborhoods(districtId);
+            if (neighborhoods == null)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, $"There is no any data with this ({districtId}) District Id."));
+            }
+            return CreateActionResult(CustomResponseDto<NeighborhoodRootObject>.Success(200, neighborhoods));
         }
 
         [ServiceFilter(typeof(NotFoundFilter<Root>))]

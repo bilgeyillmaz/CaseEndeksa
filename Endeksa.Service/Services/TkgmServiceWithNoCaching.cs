@@ -23,6 +23,7 @@ namespace Endeksa.Service.Services
             _unitOfWork = unitOfWork;
         }
 
+
         public async Task<RootDto> GetDatasByCoordinates(double Latitude, double Longitude)
         {
             RootDto rootDto = new RootDto();
@@ -73,6 +74,21 @@ namespace Endeksa.Service.Services
                 }
             }
             return rootDto;
+        }
+
+        public Task<DistrictRootObject> GetDistricts(int CityId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<NeighborhoodRootObject> GetNeighborhoods(int DistrictId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CityFeature> GetOrCreateCityByIdAsync(int CityId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
