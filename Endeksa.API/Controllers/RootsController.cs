@@ -35,7 +35,7 @@ namespace Endeksa.API.Controllers
             }
         }
 
-        [HttpGet("GetAndAddTkgmData")]
+        [HttpGet("GetAndAddTkgmDataByLocation")]
         public async Task<IActionResult>  GetDatasByCoordinates(double lat, double lng)
         {
             var rootDto = await _service.GetDatasByCoordinates(lat, lng);   
