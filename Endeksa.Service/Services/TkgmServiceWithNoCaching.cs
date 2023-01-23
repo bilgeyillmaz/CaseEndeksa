@@ -22,17 +22,6 @@ namespace Endeksa.Service.Services
             _tkgmRepository = productRepository;
             _unitOfWork = unitOfWork;
         }
-
-        public Task<CityRootObject> GetCities()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LandFeature> GetCityByName(string CityName)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<RootDto> GetDatasByCoordinates(double Latitude, double Longitude)
         {
             RootDto rootDto = new RootDto();
@@ -50,7 +39,6 @@ namespace Endeksa.Service.Services
                         {
                             coordinatesList.Add(String.Join(",", rootDto.Geometry.Coordinates[i].ToArray()[j]));
                         }
-
                     }
 
                     Root root = new Root()
@@ -85,19 +73,120 @@ namespace Endeksa.Service.Services
             return rootDto;
         }
 
-        public Task<DistrictRootObject> GetDistricts(int CityId)
+        public async Task<CityRootObject> GetCities()
         {
-            throw new NotImplementedException();
+            CityRootObject cityRootObject = new CityRootObject();
+
+            using (var httpClient = new HttpClient())
+            {
+                string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/idariYapi/ilListe";
+                using (var response = await httpClient.GetAsync(apiurl))
+                {
+                    if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        cityRootObject = JsonConvert.DeserializeObject<CityRootObject>(apiResponse);
+                    }
+                }
+            }
+            return cityRootObject;
         }
 
-        public Task<NeighborhoodRootObject> GetNeighborhoods(int DistrictId)
+        public async Task<DistrictRootObject> GetDistricts(int CityId)
         {
-            throw new NotImplementedException();
+            DistrictRootObject districtRootObject = new DistrictRootObject();
+
+            using (var httpClient = new HttpClient())
+            {
+                string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api//idariYapi/ilceListe/" + CityId;
+                using (var response = await httpClient.GetAsync(apiurl))
+                {
+                    if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        districtRootObject = JsonConvert.DeserializeObject<DistrictRootObject>(apiResponse);
+                    }
+                }
+            }
+            return districtRootObject;
         }
 
-        public Task<RootDto> GetParcelDatasByParcelInfo(string cityName, string districtName, string neighborhoodName, int parcelNo, int blockNo)
+        public async Task<NeighborhoodRootObject> GetNeighborhoods(int DistrictId)
         {
-            throw new NotImplementedException();
+            NeighborhoodRootObject neighborhoodRootObject = new NeighborhoodRootObject();
+
+            using (var httpClient = new HttpClient())
+            {
+                string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/idariYapi/mahalleListe/" + DistrictId;
+                using (var response = await httpClient.GetAsync(apiurl))
+                {
+                    if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        neighborhoodRootObject = JsonConvert.DeserializeObject<NeighborhoodRootObject>(apiResponse);
+                    }
+                }
+            }
+            return neighborhoodRootObject;
+        }
+
+        public async Task<RootDto> GetParcelDatasByParcelInfo(string cityName, string districtName,
+            string neighborhoodName, int parcelNo, int blockNo)
+        {
+            RootDto rootDto = new();
+
+            await GetCities();
+            var cityId = GetCities().Result.Features.FirstOrDefault(x => x.Properties.Text == cityName).Properties.Id;
+            await GetDistricts(cityId);
+            var districtId = GetDistricts(cityId).Result.Features.FirstOrDefault(x => x.Properties.Text == districtName).Properties.Id;
+            await GetNeighborhoods(districtId);
+            var neighborhoodId = GetNeighborhoods(districtId).Result.Features.FirstOrDefault(x => x.Properties.Text == neighborhoodName).Properties.Id;
+
+            if (rootDto == null)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/" + neighborhoodId + "/" + blockNo + "/" + parcelNo + "/";
+                    using (var response = await httpClient.GetAsync(apiurl))
+                    {
+                        if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            rootDto = JsonConvert.DeserializeObject<RootDto>(apiResponse);
+
+                            Root root = new Root()
+                            {
+                                Type = rootDto.Type,
+                                GeometryType = rootDto.Geometry.Type,
+                                Coordinates = JsonConvert.SerializeObject(rootDto.Geometry.Coordinates),
+                                Durum = rootDto.Properties.Durum,
+                                IlAd = rootDto.Properties.IlAd,
+                                IlceAd = rootDto.Properties.llceAd,
+                                IlId = rootDto.Properties.IlId,
+                                IlceId = rootDto.Properties.IlceId,
+                                MahalleId = rootDto.Properties.MahalleId,
+                                MahalleAd = rootDto.Properties.MahalleAd,
+                                Pafta = rootDto.Properties.Pafta,
+                                Alan = rootDto.Properties.Alan,
+                                Mevkii = rootDto.Properties.Mevkii,
+                                ParselId = rootDto.Properties.ParselId,
+                                Nitelik = rootDto.Properties.Nitelik,
+                                GittigiParselListe = rootDto.Properties.GittigiParselListe,
+                                GittigiParselSebep = rootDto.Properties.GittigiParselSebep,
+                                ZeminKmdurum = rootDto.Properties.ZeminKmdurum,
+                                AdaNo = rootDto.Properties.AdaNo,
+                                ZeminId = rootDto.Properties.ZeminId,
+                                ParselNo = rootDto.Properties.ParselNo
+                            };
+
+                            await _tkgmRepository.AddAsync(root);
+                            await _unitOfWork.CommitAsync();
+                        }
+                    }
+                }
+            }
+
+            return rootDto;
         }
     }
 }

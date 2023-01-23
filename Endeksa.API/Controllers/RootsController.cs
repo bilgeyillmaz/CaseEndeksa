@@ -24,10 +24,10 @@ namespace Endeksa.API.Controllers
         public async Task<IActionResult> All()
         {
             var roots = await _service.GetAllAsync();
-            if(roots == null)
+            if (roots == null)
             {
-              return CreateActionResult(CustomResponseDto<NoContentDto>
-                  .Fail(404, "There is no any data at redis cache."));
+                return CreateActionResult(CustomResponseDto<NoContentDto>
+                    .Fail(404, "There is no any data at redis cache."));
             }
             else
             {
@@ -37,9 +37,9 @@ namespace Endeksa.API.Controllers
         }
 
         [HttpGet("GetAndAddTkgmDataByLocation")]
-        public async Task<IActionResult>  GetDatasByCoordinates(double lat, double lon)
+        public async Task<IActionResult> GetDatasByCoordinates(double lat, double lon)
         {
-            var rootDto = await _service.GetDatasByCoordinates(lat, lon);   
+            var rootDto = await _service.GetDatasByCoordinates(lat, lon);
             return CreateActionResult(CustomResponseDto<RootDto>.Success(200, rootDto));
         }
 
