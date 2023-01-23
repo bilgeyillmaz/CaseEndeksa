@@ -15,9 +15,11 @@ Mimaride bulunan Repository katmanı DataAccess, Service katmanı ise Business k
 Proje katmanlarının ortak olarak kullandığı classlar Core katmanı içerisinde tanımlanmıştır.
 API katmanında ise swagger yardımı ile data operasyonları (CRUD) yapılabilmektedir.
 
-GetAndAddTkgmData action'ı kullanıldığında; datalar tkgm api üzerinden getirilmekte, veri tabanı ve cache e kaydedilmektedir.
+GetAndAddTkgmData action'ı koordinat, GetParcelDatasByParcelInfo endpoint'i ise parsele ait İl adı, İlçe adı, Mahalle adı, Ada No ve Parsel No bilgilerini bilgilerini girdi olarak alır, bu endpointler kullanıldığında; datalar tkgm api üzerinden getirilmekte, veri tabanı ve cache e kaydedilmektedir.
 Eğer cache üzerinde data bulunmuyor ise; GetAll actionı üzerinden "There is no any data at redis cache." uyarısı dönecektir.
-GetAndAddTkgmData action'a istek yapıldığında; öncelikle datalar redis cache üzerinde bulunuyor mu kontrolü yapılır, eğer bu data
+GetAndAddTkgmData ve GetParcelDatasByParcelInfo action'a istek yapıldığında; öncelikle datalar redis cache üzerinde bulunuyor mu kontrolü yapılır, eğer bu data
 cache sisteminde bulunmuyor ise web servis üzerinden datalar çekilmektedir.
+
+Uygulama aracılığı ile; Türkiyeye ait il listesi, bu il idleri kullanılarak illere ait ilçeler ve ilçe id bilgisi girişi yapılarak ilçelere ait mahallelerin listelenmesi sağlanır.
 
 - Endeksa.API > Properties > launchSettings.json > default true olan launchBrowser ayarı "false" olarak değiştirilmiştir.
