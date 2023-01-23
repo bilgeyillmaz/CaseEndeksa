@@ -10,28 +10,39 @@ namespace Endeksa.Core.Models
     [JsonObject("Root")]
     public class DistrictRootObject
     {
-        public List<DistrictFeature> features { get; set; }
-        public string type { get; set; }
-        public DistrictCrs crs { get; set; }
+        [JsonProperty("features")]
+        public List<DistrictFeature> Features { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("crs")]
+        public DistrictCrs Crs { get; set; }
     }
     [JsonObject("Crs")]
     public class DistrictCrs
     {
-        public string type { get; set; }
-        public DistrictProperties properties { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("properties")]
+        public DistrictProperties Properties { get; set; }
     }
     [JsonObject("Feature")]
     public class DistrictFeature
     {
-        public string type { get; set; }
-        public object geometry { get; set; }
-        public DistrictProperties properties { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("geometry")]
+        public object Geometry { get; set; }
+        [JsonProperty("properties")]
+        public DistrictProperties Properties { get; set; }
     }
     [JsonObject("Properties")]
     public class DistrictProperties
     {
-        public string text { get; set; }
-        public int id { get; set; }
-        public string name { get; set; }
+        [JsonProperty("text")]
+        public string Text { get; set; }
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 }

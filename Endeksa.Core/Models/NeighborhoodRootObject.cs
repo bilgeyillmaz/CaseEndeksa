@@ -10,38 +10,51 @@ namespace Endeksa.Core.Models
     [JsonObject("Crs")]
     public class NeighborhoodCrs
     {
-        public string type { get; set; }
-        public NeighborhoodProperties properties { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("properties")]
+        public NeighborhoodProperties Properties { get; set; }
     }
 
     [JsonObject("Feature")]
     public class NeighborhoodFeature
     {
-        public string type { get; set; }
-        public NeighborhoodGeometry geometry { get; set; }
-        public NeighborhoodProperties properties { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("geometry")]
+        public NeighborhoodGeometry Geometry { get; set; }
+        [JsonProperty("properties")]
+        public NeighborhoodProperties Properties { get; set; }
     }
 
     [JsonObject("Geometry")]
     public class NeighborhoodGeometry
     {
-        public string type { get; set; }
-        public List<List<List<double>>> coordinates { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("coordinates")]
+        public List<List<List<double>>> Coordinates { get; set; }
     }
 
     [JsonObject("Properties")]
     public class NeighborhoodProperties
     {
-        public string text { get; set; }
-        public int id { get; set; }
-        public string name { get; set; }
+        [JsonProperty("text")]
+        public string Text { get; set; }
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 
     [JsonObject("Root")]
     public class NeighborhoodRootObject
     {
-        public List<NeighborhoodFeature> features { get; set; }
-        public string type { get; set; }
-        public NeighborhoodCrs crs { get; set; }
+        [JsonProperty("features")]    
+        public List<NeighborhoodFeature> Features { get; set; }
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [JsonProperty("crs")]
+        public NeighborhoodCrs Crs { get; set; }
     }
 }

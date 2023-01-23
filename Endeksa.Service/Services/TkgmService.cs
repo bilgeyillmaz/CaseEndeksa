@@ -208,31 +208,6 @@ namespace Endeksa.Service.Services
             return neighborhoodRootObject;
         }
 
-        public async Task<NeighborhoodDetailRoot> GetNeighborhoodDetail(int NeighborhoodId)
-        {
-            NeighborhoodDetailRoot neighborhoodDetailRoot = new NeighborhoodDetailRoot();
-            neighborhoodDetailRoot = _redisCache.GetData<NeighborhoodDetailRoot>($"{NeighborhoodId}");
-
-            if (neighborhoodDetailRoot == null)
-            {
-                using (var httpClient = new HttpClient())
-                {
-                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/" + NeighborhoodId;
-                    using (var response = await httpClient.GetAsync(apiurl))
-                    {
-                        if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
-                        {
-                            string apiResponse = await response.Content.ReadAsStringAsync();
-                            neighborhoodDetailRoot = JsonConvert.DeserializeObject<NeighborhoodDetailRoot>(apiResponse);
-                            _redisCache.SetData<NeighborhoodDetailRoot>($"{neighborhoodDetailRoot.properties.mahalleId}",
-                            neighborhoodDetailRoot, DateTimeOffset.Now.AddMinutes(5));
-                        }
-                    }
-                }
-            }
-            return neighborhoodDetailRoot;
-        }
-
         public async Task<CityRootObject> GetCities()
         {
             CityRootObject cityRootObject = new CityRootObject();
@@ -265,12 +240,11 @@ namespace Endeksa.Service.Services
             rootDto = _redisCache.GetData<RootDto>($"{cityName}/{districtName}/{neighborhoodName}/{blockNo}/{parcelNo}");
 
             await GetCities();
-            var cityId = GetCities().Result.features.FirstOrDefault(x=>x.properties.text == cityName).properties.id;
+            var cityId = GetCities().Result.Features.FirstOrDefault(x=>x.Properties.Text == cityName).Properties.Id;
             await GetDistricts(cityId);
-            var districtId = GetDistricts(cityId).Result.features.FirstOrDefault(x => x.properties.text == districtName).properties.id;
+            var districtId = GetDistricts(cityId).Result.Features.FirstOrDefault(x => x.Properties.Text == districtName).Properties.Id;
             await GetNeighborhoods(districtId); 
-            var neighborhoodId = GetNeighborhoods(districtId).Result.features.FirstOrDefault(x => x.properties.text == neighborhoodName).properties.id;
-            var neighborhoodDetail = GetNeighborhoodDetail(neighborhoodId);
+            var neighborhoodId = GetNeighborhoods(districtId).Result.Features.FirstOrDefault(x => x.Properties.Text == neighborhoodName).Properties.Id;
 
             if (rootDto == null)
             {
@@ -299,8 +273,8 @@ namespace Endeksa.Service.Services
                             Mevkii = rootDto.Properties.Mevkii,
                             ParselId = rootDto.Properties.ParselId,
                             Nitelik = rootDto.Properties.Nitelik,
-                            GittigiParselListe = JsonConvert.SerializeObject(neighborhoodDetail.Result?.properties.gittigiParselListe),
-                            GittigiParselSebep = JsonConvert.SerializeObject(neighborhoodDetail.Result?.properties.gittigiParselSebep),
+                            GittigiParselListe = rootDto.Properties.GittigiParselListe,
+                            GittigiParselSebep = rootDto.Properties.GittigiParselSebep,
                             ZeminKmdurum = rootDto.Properties.ZeminKmdurum,
                             AdaNo = rootDto.Properties.AdaNo,
                             ZeminId = rootDto.Properties.ZeminId,
@@ -309,8 +283,6 @@ namespace Endeksa.Service.Services
 
                         await _repository.AddAsync(root);
                         await _unitOfWork.CommitAsync();
-                        rootDto.Properties.GittigiParselListe = neighborhoodDetail.Result?.properties?.gittigiParselListe;
-                        rootDto.Properties.GittigiParselListe = neighborhoodDetail.Result?.properties?.gittigiParselSebep;
 
                         _redisCache.SetData<RootDto>($"{cityName}/{districtName}/{neighborhoodName}/{blockNo}/{parcelNo}",
                             rootDto, DateTimeOffset.Now.AddMinutes(5));

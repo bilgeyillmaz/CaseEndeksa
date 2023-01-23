@@ -67,21 +67,9 @@ namespace Endeksa.API.Controllers
             return CreateActionResult(CustomResponseDto<NeighborhoodRootObject>.Success(200, neighborhoods));
         }
 
-        [HttpGet("GetNeighborhoodDetailByNeighborhoodId")]
-        public async Task<IActionResult> GetNeighborhoodDetailByNeighborhoodId(int neighborhoodId)
-        {
-            var neighborhood = await _service.GetNeighborhoodDetail(neighborhoodId);
-            if (neighborhood == null)
-            {
-                return CreateActionResult(CustomResponseDto<NoContentDto>
-                    .Fail(404, $"There is no any data with this ({neighborhoodId}) City Id."));
-            }
-            return CreateActionResult(CustomResponseDto<NeighborhoodDetailRoot>.Success(200, neighborhood));
-        }
-
         [HttpGet("GetParcelDatasByParcelInfo")]
         public async Task<IActionResult> GetParcelDatasByParcelInfo(string cityName, string districtName,
-            string neighborhoodName, int parcelNo, int blockNo)
+            string neighborhoodName, int blockNo, int parcelNo)
         {
             var parcelDetail = await _service.GetParcelDatasByParcelInfo(cityName, districtName,
                 neighborhoodName, parcelNo, blockNo);

@@ -89,10 +89,6 @@ namespace Endeksa.Service.Services
         {
             throw new NotImplementedException();
         }
-        public Task<NeighborhoodDetailRoot> GetNeighborhoodDetail(int NeighborhoodId)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<NeighborhoodRootObject> GetNeighborhoods(int DistrictId)
         {

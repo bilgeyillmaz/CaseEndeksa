@@ -16,6 +16,5 @@ namespace Endeksa.Core.Services
         Task<CityRootObject> GetCities();
         Task<DistrictRootObject> GetDistricts(int CityId);
         Task<NeighborhoodRootObject> GetNeighborhoods(int DistrictId);
-        Task<NeighborhoodDetailRoot> GetNeighborhoodDetail(int NeighborhoodId);
     }
 }
