@@ -15,15 +15,7 @@ namespace Endeksa.Core.Models
         [JsonProperty("type")]
         public string Type { get; set; }
         [JsonProperty("crs")]
-        public CityCrs Crs { get; set; }
-    }
-    [JsonObject("Crs")]
-    public class CityCrs
-    {
-        [JsonProperty("type")]
-        public string Type { get; set; }
-        [JsonProperty("properties")]
-        public CityProperties Properties { get; set; }
+        public Crs Crs { get; set; }
     }
     [JsonObject("Feature")]
     public class CityFeature
@@ -33,7 +25,8 @@ namespace Endeksa.Core.Models
         [JsonProperty("geometry")]
         public CityGeometry Geometry { get; set; }
         [JsonProperty("properties")]
-        public CityProperties Properties { get; set; }
+
+        public LandProperties Properties { get; set; }
     }
     [JsonObject("Geometry")]
     public class CityGeometry
@@ -42,15 +35,5 @@ namespace Endeksa.Core.Models
         public string Type { get; set; }
         [JsonProperty("coordinates")]
         public List<List<List<object>>> Coordinates { get; set; }
-    }
-    [JsonObject("Properties")]
-    public class CityProperties
-    {
-        [JsonProperty("text")]
-        public string Text { get; set; }
-        [JsonProperty("id")]
-        public int Id { get; set; }
-        [JsonProperty("name")]
-        public string Name { get; set; }
     }
 }

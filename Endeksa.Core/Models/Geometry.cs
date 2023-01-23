@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace Endeksa.Core.Models
 {
     [NotMapped]
+    [JsonObject("geometry")]
     public class Geometry
     {
         //public int Id { get; set; }

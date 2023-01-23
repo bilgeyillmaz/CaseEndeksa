@@ -43,6 +43,18 @@ namespace Endeksa.API.Controllers
             return CreateActionResult(CustomResponseDto<RootDto>.Success(200, rootDto));
         }
 
+        [HttpGet("GetCities")]
+        public async Task<IActionResult> GetCities()
+        {
+            var cities = await _service.GetCities();
+            if (cities == null)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>
+                    .Fail(404, $"There is no any data."));
+            }
+            return CreateActionResult(CustomResponseDto<CityRootObject>.Success(200, cities));
+        }
+
         [HttpGet("GetDistrictsByCityId")]
         public async Task<IActionResult> GetDistrictsByCityId(int cityId)
         {

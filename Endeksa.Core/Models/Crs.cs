@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace Endeksa.Core.Models
 {
-    [JsonObject("Root")]
-    public class NeighborhoodRootObject
+    [JsonObject("Crs")]
+    public class Crs
     {
-        [JsonProperty("features")]    
-        public List<LandFeature> Features { get; set; }
         [JsonProperty("type")]
         public string Type { get; set; }
-        [JsonProperty("crs")]
-        public Crs Crs { get; set; }
+        [JsonProperty("properties")]
+        public LandProperties Properties { get; set; }
     }
 }

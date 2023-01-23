@@ -28,7 +28,7 @@ namespace Endeksa.Service.Services
             throw new NotImplementedException();
         }
 
-        public Task<CityFeature> GetCityByName(string CityName)
+        public Task<LandFeature> GetCityByName(string CityName)
         {
             throw new NotImplementedException();
         }

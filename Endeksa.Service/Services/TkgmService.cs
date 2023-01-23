@@ -236,57 +236,60 @@ namespace Endeksa.Service.Services
         public async Task<RootDto> GetParcelDatasByParcelInfo(string cityName, string districtName,
             string neighborhoodName, int parcelNo, int blockNo)
         {
-            RootDto rootDto= new();
+            RootDto rootDto = new();
             rootDto = _redisCache.GetData<RootDto>($"{cityName}/{districtName}/{neighborhoodName}/{blockNo}/{parcelNo}");
 
             await GetCities();
-            var cityId = GetCities().Result.Features.FirstOrDefault(x=>x.Properties.Text == cityName).Properties.Id;
+            var cityId = GetCities().Result.Features.FirstOrDefault(x => x.Properties.Text == cityName).Properties.Id;
             await GetDistricts(cityId);
             var districtId = GetDistricts(cityId).Result.Features.FirstOrDefault(x => x.Properties.Text == districtName).Properties.Id;
-            await GetNeighborhoods(districtId); 
+            await GetNeighborhoods(districtId);
             var neighborhoodId = GetNeighborhoods(districtId).Result.Features.FirstOrDefault(x => x.Properties.Text == neighborhoodName).Properties.Id;
 
             if (rootDto == null)
             {
                 using (var httpClient = new HttpClient())
                 {
-                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/"+ neighborhoodId + "/"+ blockNo + "/" + parcelNo + "/";
+                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/" + neighborhoodId + "/" + blockNo + "/" + parcelNo + "/";
                     using (var response = await httpClient.GetAsync(apiurl))
                     {
-                        string apiResponse = await response.Content.ReadAsStringAsync();
-                        rootDto = JsonConvert.DeserializeObject<RootDto>(apiResponse);
-
-                        Root root = new Root()
+                        if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
                         {
-                            Type = rootDto.Type,
-                            GeometryType = rootDto.Geometry.Type,
-                            Coordinates = JsonConvert.SerializeObject(rootDto.Geometry.Coordinates),
-                            Durum = rootDto.Properties.Durum,
-                            IlAd = rootDto.Properties.IlAd,
-                            IlceAd = rootDto.Properties.llceAd,
-                            IlId = rootDto.Properties.IlId,
-                            IlceId = rootDto.Properties.IlceId,
-                            MahalleId = rootDto.Properties.MahalleId,
-                            MahalleAd = rootDto.Properties.MahalleAd,
-                            Pafta = rootDto.Properties.Pafta,
-                            Alan = rootDto.Properties.Alan,
-                            Mevkii = rootDto.Properties.Mevkii,
-                            ParselId = rootDto.Properties.ParselId,
-                            Nitelik = rootDto.Properties.Nitelik,
-                            GittigiParselListe = rootDto.Properties.GittigiParselListe,
-                            GittigiParselSebep = rootDto.Properties.GittigiParselSebep,
-                            ZeminKmdurum = rootDto.Properties.ZeminKmdurum,
-                            AdaNo = rootDto.Properties.AdaNo,
-                            ZeminId = rootDto.Properties.ZeminId,
-                            ParselNo = rootDto.Properties.ParselNo
-                        };
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            rootDto = JsonConvert.DeserializeObject<RootDto>(apiResponse);
 
-                        await _repository.AddAsync(root);
-                        await _unitOfWork.CommitAsync();
+                            Root root = new Root()
+                            {
+                                Type = rootDto.Type,
+                                GeometryType = rootDto.Geometry.Type,
+                                Coordinates = JsonConvert.SerializeObject(rootDto.Geometry.Coordinates),
+                                Durum = rootDto.Properties.Durum,
+                                IlAd = rootDto.Properties.IlAd,
+                                IlceAd = rootDto.Properties.llceAd,
+                                IlId = rootDto.Properties.IlId,
+                                IlceId = rootDto.Properties.IlceId,
+                                MahalleId = rootDto.Properties.MahalleId,
+                                MahalleAd = rootDto.Properties.MahalleAd,
+                                Pafta = rootDto.Properties.Pafta,
+                                Alan = rootDto.Properties.Alan,
+                                Mevkii = rootDto.Properties.Mevkii,
+                                ParselId = rootDto.Properties.ParselId,
+                                Nitelik = rootDto.Properties.Nitelik,
+                                GittigiParselListe = rootDto.Properties.GittigiParselListe,
+                                GittigiParselSebep = rootDto.Properties.GittigiParselSebep,
+                                ZeminKmdurum = rootDto.Properties.ZeminKmdurum,
+                                AdaNo = rootDto.Properties.AdaNo,
+                                ZeminId = rootDto.Properties.ZeminId,
+                                ParselNo = rootDto.Properties.ParselNo
+                            };
 
-                        _redisCache.SetData<RootDto>($"{cityName}/{districtName}/{neighborhoodName}/{blockNo}/{parcelNo}",
-                            rootDto, DateTimeOffset.Now.AddMinutes(5));
-                        await CacheAllRootsAsync(CacheRootKey);
+                            await _repository.AddAsync(root);
+                            await _unitOfWork.CommitAsync();
+
+                            _redisCache.SetData<RootDto>($"{cityName}/{districtName}/{neighborhoodName}/{blockNo}/{parcelNo}",
+                                rootDto, DateTimeOffset.Now.AddMinutes(5));
+                            await CacheAllRootsAsync(CacheRootKey);
+                        }
                     }
                 }
             }
