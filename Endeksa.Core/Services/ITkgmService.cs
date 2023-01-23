@@ -11,8 +11,11 @@ namespace Endeksa.Core.Services
     public interface ITkgmService : IService<Root>
     {
         Task<RootDto> GetDatasByCoordinates(double Latitude, double Longitude);
-        Task<CityFeature> GetOrCreateCityByIdAsync(int CityId);
+        Task<RootDto> GetParcelDatasByParcelInfo(string cityName, string districtName,
+            string neighborhoodName, int parcelNo, int blockNo);
+        Task<CityRootObject> GetCities();
         Task<DistrictRootObject> GetDistricts(int CityId);
         Task<NeighborhoodRootObject> GetNeighborhoods(int DistrictId);
+        Task<NeighborhoodDetailRoot> GetNeighborhoodDetail(int NeighborhoodId);
     }
 }

@@ -23,6 +23,15 @@ namespace Endeksa.Service.Services
             _unitOfWork = unitOfWork;
         }
 
+        public Task<CityRootObject> GetCities()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CityFeature> GetCityByName(string CityName)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<RootDto> GetDatasByCoordinates(double Latitude, double Longitude)
         {
@@ -80,13 +89,17 @@ namespace Endeksa.Service.Services
         {
             throw new NotImplementedException();
         }
+        public Task<NeighborhoodDetailRoot> GetNeighborhoodDetail(int NeighborhoodId)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task<NeighborhoodRootObject> GetNeighborhoods(int DistrictId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CityFeature> GetOrCreateCityByIdAsync(int CityId)
+        public Task<RootDto> GetParcelDatasByParcelInfo(string cityName, string districtName, string neighborhoodName, int parcelNo, int blockNo)
         {
             throw new NotImplementedException();
         }

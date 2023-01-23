@@ -26,7 +26,8 @@ namespace Endeksa.API.Controllers
             var roots = await _service.GetAllAsync();
             if(roots == null)
             {
-              return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, "There is no any data at redis cache."));
+              return CreateActionResult(CustomResponseDto<NoContentDto>
+                  .Fail(404, "There is no any data at redis cache."));
             }
             else
             {
@@ -42,24 +43,14 @@ namespace Endeksa.API.Controllers
             return CreateActionResult(CustomResponseDto<RootDto>.Success(200, rootDto));
         }
 
-        [HttpGet("GetCityById")]
-        public async Task<IActionResult> GetCityById(int cityId)
-        {
-            var city = await _service.GetOrCreateCityByIdAsync(cityId);
-            if(city == null)
-            {
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, $"There is no any data with this ({cityId}) City Id."));
-            }
-            return CreateActionResult(CustomResponseDto<CityFeature>.Success(200, city));
-        }
-
         [HttpGet("GetDistrictsByCityId")]
         public async Task<IActionResult> GetDistrictsByCityId(int cityId)
         {
             var districts = await _service.GetDistricts(cityId);
             if (districts == null)
             {
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, $"There is no any data with this ({cityId}) City Id."));
+                return CreateActionResult(CustomResponseDto<NoContentDto>
+                    .Fail(404, $"There is no any data with this ({cityId}) City Id."));
             }
             return CreateActionResult(CustomResponseDto<DistrictRootObject>.Success(200, districts));
         }
@@ -70,9 +61,36 @@ namespace Endeksa.API.Controllers
             var neighborhoods = await _service.GetNeighborhoods(districtId);
             if (neighborhoods == null)
             {
-                return CreateActionResult(CustomResponseDto<NoContentDto>.Fail(404, $"There is no any data with this ({districtId}) District Id."));
+                return CreateActionResult(CustomResponseDto<NoContentDto>
+                    .Fail(404, $"There is no any data with this ({districtId}) District Id."));
             }
             return CreateActionResult(CustomResponseDto<NeighborhoodRootObject>.Success(200, neighborhoods));
+        }
+
+        [HttpGet("GetNeighborhoodDetailByNeighborhoodId")]
+        public async Task<IActionResult> GetNeighborhoodDetailByNeighborhoodId(int neighborhoodId)
+        {
+            var neighborhood = await _service.GetNeighborhoodDetail(neighborhoodId);
+            if (neighborhood == null)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>
+                    .Fail(404, $"There is no any data with this ({neighborhoodId}) City Id."));
+            }
+            return CreateActionResult(CustomResponseDto<NeighborhoodDetailRoot>.Success(200, neighborhood));
+        }
+
+        [HttpGet("GetParcelDatasByParcelInfo")]
+        public async Task<IActionResult> GetParcelDatasByParcelInfo(string cityName, string districtName,
+            string neighborhoodName, int parcelNo, int blockNo)
+        {
+            var parcelDetail = await _service.GetParcelDatasByParcelInfo(cityName, districtName,
+                neighborhoodName, parcelNo, blockNo);
+            if (parcelDetail == null)
+            {
+                return CreateActionResult(CustomResponseDto<NoContentDto>
+                    .Fail(404, $"There is no any data."));
+            }
+            return CreateActionResult(CustomResponseDto<RootDto>.Success(200, parcelDetail));
         }
 
         [ServiceFilter(typeof(NotFoundFilter<Root>))]

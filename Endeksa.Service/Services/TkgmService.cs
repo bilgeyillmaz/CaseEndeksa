@@ -39,7 +39,6 @@ namespace Endeksa.Service.Services
         {
             await _repository.AddAsync(entity);
             await _unitOfWork.CommitAsync();
-
             return entity;
         }
 
@@ -47,7 +46,6 @@ namespace Endeksa.Service.Services
         {
             await _repository.AddRangeAsync(entities);
             await _unitOfWork.CommitAsync();
-
             return entities;
         }
 
@@ -163,7 +161,7 @@ namespace Endeksa.Service.Services
         public async Task<DistrictRootObject> GetDistricts(int CityId)
         {
             DistrictRootObject districtRootObject = new DistrictRootObject();
-            districtRootObject = _redisCache.GetData<DistrictRootObject>($"{CityId}");
+            districtRootObject = _redisCache.GetData<DistrictRootObject>($"Districts({CityId})");
 
             if (districtRootObject == null)
             {
@@ -176,7 +174,7 @@ namespace Endeksa.Service.Services
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
                             districtRootObject = JsonConvert.DeserializeObject<DistrictRootObject>(apiResponse);
-                            _redisCache.SetData<DistrictRootObject>($"{districtRootObject.crs.properties.id}",
+                            _redisCache.SetData<DistrictRootObject>($"Districts({CityId})",
                                 districtRootObject, DateTimeOffset.Now.AddMinutes(5));
                         }
                     }
@@ -188,7 +186,7 @@ namespace Endeksa.Service.Services
         public async Task<NeighborhoodRootObject> GetNeighborhoods(int DistrictId)
         {
             NeighborhoodRootObject neighborhoodRootObject = new NeighborhoodRootObject();
-            neighborhoodRootObject = _redisCache.GetData<NeighborhoodRootObject>($"{DistrictId}");
+            neighborhoodRootObject = _redisCache.GetData<NeighborhoodRootObject>($"Neighborhoods({DistrictId})");
 
             if (neighborhoodRootObject == null)
             {
@@ -201,7 +199,7 @@ namespace Endeksa.Service.Services
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
                             neighborhoodRootObject = JsonConvert.DeserializeObject<NeighborhoodRootObject>(apiResponse);
-                            _redisCache.SetData<NeighborhoodRootObject>($"{neighborhoodRootObject?.crs.properties.id}",
+                            _redisCache.SetData<NeighborhoodRootObject>($"Neighborhoods({DistrictId})",
                             neighborhoodRootObject, DateTimeOffset.Now.AddMinutes(5));
                         }
                     }
@@ -210,10 +208,34 @@ namespace Endeksa.Service.Services
             return neighborhoodRootObject;
         }
 
-        public async Task<CityFeature> GetOrCreateCityByIdAsync(int CityId)
+        public async Task<NeighborhoodDetailRoot> GetNeighborhoodDetail(int NeighborhoodId)
+        {
+            NeighborhoodDetailRoot neighborhoodDetailRoot = new NeighborhoodDetailRoot();
+            neighborhoodDetailRoot = _redisCache.GetData<NeighborhoodDetailRoot>($"{NeighborhoodId}");
+
+            if (neighborhoodDetailRoot == null)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/" + NeighborhoodId;
+                    using (var response = await httpClient.GetAsync(apiurl))
+                    {
+                        if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            neighborhoodDetailRoot = JsonConvert.DeserializeObject<NeighborhoodDetailRoot>(apiResponse);
+                            _redisCache.SetData<NeighborhoodDetailRoot>($"{neighborhoodDetailRoot.properties.mahalleId}",
+                            neighborhoodDetailRoot, DateTimeOffset.Now.AddMinutes(5));
+                        }
+                    }
+                }
+            }
+            return neighborhoodDetailRoot;
+        }
+
+        public async Task<CityRootObject> GetCities()
         {
             CityRootObject cityRootObject = new CityRootObject();
-            CityFeature city = new CityFeature();
             cityRootObject = _redisCache.GetData<CityRootObject>("CitiesOfTurkey");
 
             if (cityRootObject == null)
@@ -227,21 +249,78 @@ namespace Endeksa.Service.Services
                         {
                             string apiResponse = await response.Content.ReadAsStringAsync();
                             cityRootObject = JsonConvert.DeserializeObject<CityRootObject>(apiResponse);
-                            var requestCity = cityRootObject.features.FirstOrDefault(x => x.properties.id == CityId);
-                            if (requestCity != null)
-                            {
-                                _redisCache.SetData<CityFeature>($"{requestCity.properties.id}",
-                               requestCity, DateTimeOffset.Now.AddMinutes(5));
-                                city = _redisCache.GetData<CityFeature>($"{CityId}");
-                            }
+                            _redisCache.SetData<CityRootObject>("CitiesOfTurkey",
+                           cityRootObject, DateTimeOffset.Now.AddMinutes(5));
                         }
-                        city = null;
                     }
                 }
             }
-            return city;
+            return cityRootObject;
         }
 
+        public async Task<RootDto> GetParcelDatasByParcelInfo(string cityName, string districtName,
+            string neighborhoodName, int parcelNo, int blockNo)
+        {
+            RootDto rootDto= new();
+            rootDto = _redisCache.GetData<RootDto>($"{cityName}/{districtName}/{neighborhoodName}/{blockNo}/{parcelNo}");
+
+            await GetCities();
+            var cityId = GetCities().Result.features.FirstOrDefault(x=>x.properties.text == cityName).properties.id;
+            await GetDistricts(cityId);
+            var districtId = GetDistricts(cityId).Result.features.FirstOrDefault(x => x.properties.text == districtName).properties.id;
+            await GetNeighborhoods(districtId); 
+            var neighborhoodId = GetNeighborhoods(districtId).Result.features.FirstOrDefault(x => x.properties.text == neighborhoodName).properties.id;
+            var neighborhoodDetail = GetNeighborhoodDetail(neighborhoodId);
+
+            if (rootDto == null)
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string apiurl = "https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/"+ neighborhoodId + "/"+ blockNo + "/" + parcelNo + "/";
+                    using (var response = await httpClient.GetAsync(apiurl))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        rootDto = JsonConvert.DeserializeObject<RootDto>(apiResponse);
+
+                        Root root = new Root()
+                        {
+                            Type = rootDto.Type,
+                            GeometryType = rootDto.Geometry.Type,
+                            Coordinates = JsonConvert.SerializeObject(rootDto.Geometry.Coordinates),
+                            Durum = rootDto.Properties.Durum,
+                            IlAd = rootDto.Properties.IlAd,
+                            IlceAd = rootDto.Properties.llceAd,
+                            IlId = rootDto.Properties.IlId,
+                            IlceId = rootDto.Properties.IlceId,
+                            MahalleId = rootDto.Properties.MahalleId,
+                            MahalleAd = rootDto.Properties.MahalleAd,
+                            Pafta = rootDto.Properties.Pafta,
+                            Alan = rootDto.Properties.Alan,
+                            Mevkii = rootDto.Properties.Mevkii,
+                            ParselId = rootDto.Properties.ParselId,
+                            Nitelik = rootDto.Properties.Nitelik,
+                            GittigiParselListe = JsonConvert.SerializeObject(neighborhoodDetail.Result?.properties.gittigiParselListe),
+                            GittigiParselSebep = JsonConvert.SerializeObject(neighborhoodDetail.Result?.properties.gittigiParselSebep),
+                            ZeminKmdurum = rootDto.Properties.ZeminKmdurum,
+                            AdaNo = rootDto.Properties.AdaNo,
+                            ZeminId = rootDto.Properties.ZeminId,
+                            ParselNo = rootDto.Properties.ParselNo
+                        };
+
+                        await _repository.AddAsync(root);
+                        await _unitOfWork.CommitAsync();
+                        rootDto.Properties.GittigiParselListe = neighborhoodDetail.Result?.properties?.gittigiParselListe;
+                        rootDto.Properties.GittigiParselListe = neighborhoodDetail.Result?.properties?.gittigiParselSebep;
+
+                        _redisCache.SetData<RootDto>($"{cityName}/{districtName}/{neighborhoodName}/{blockNo}/{parcelNo}",
+                            rootDto, DateTimeOffset.Now.AddMinutes(5));
+                        await CacheAllRootsAsync(CacheRootKey);
+                    }
+                }
+            }
+
+            return rootDto;
+        }
         public async Task CacheAllRootsAsync(string cacheKEY)
         {
             _redisCache.SetData(cacheKEY, await _repository.GetAll().ToListAsync(), DateTimeOffset.Now.AddMinutes(5));
