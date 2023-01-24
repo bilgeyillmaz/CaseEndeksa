@@ -239,12 +239,18 @@ namespace Endeksa.Service.Services
             RootDto rootDto = new();
             rootDto = _redisCache.GetData<RootDto>($"{cityName}/{districtName}/{neighborhoodName}/{blockNo}/{parcelNo}");
 
-            await GetCities();
-            var cityId = GetCities().Result.Features.FirstOrDefault(x => x.Properties.Text == cityName).Properties.Id;
-            await GetDistricts(cityId);
-            var districtId = GetDistricts(cityId).Result.Features.FirstOrDefault(x => x.Properties.Text == districtName).Properties.Id;
-            await GetNeighborhoods(districtId);
-            var neighborhoodId = GetNeighborhoods(districtId).Result.Features.FirstOrDefault(x => x.Properties.Text == neighborhoodName).Properties.Id;
+            var cities = GetCities();
+            if (cities.Result.Features.FirstOrDefault(x => x.Properties.Text == cityName) == null)
+                return rootDto;
+            var cityId = cities.Result.Features.FirstOrDefault(x => x.Properties.Text == cityName).Properties.Id;
+            var districts = GetDistricts(cityId);
+            if (districts.Result.Features.FirstOrDefault(x => x.Properties.Text == districtName) == null)
+                return rootDto;
+            var districtId = districts.Result.Features.FirstOrDefault(x => x.Properties.Text == districtName).Properties.Id;
+            var neighborhoods = GetNeighborhoods(districtId);
+            if (neighborhoods.Result.Features.FirstOrDefault(x => x.Properties.Text == neighborhoodName) == null)
+                return rootDto;
+            var neighborhoodId = neighborhoods.Result.Features.FirstOrDefault(x => x.Properties.Text == neighborhoodName).Properties.Id;
 
             if (rootDto == null)
             {
